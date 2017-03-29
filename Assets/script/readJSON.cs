@@ -18,6 +18,6 @@ public class readJSON : MonoBehaviour {
 	void Update () 
 	{
 		jsonString = File.ReadAllText (path);
-		//Debug.Log ("ju:  " + jsonString);
+		Debug.Log ("ju:  " + jsonString);
 	}
 }

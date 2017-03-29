@@ -38,8 +38,6 @@ public class follow_rotate : MonoBehaviour {
 
 	public GameObject public_collision;
 
-	GameObject lGameManager;
-
 
 	void Start () 
 	{
@@ -58,8 +56,6 @@ public class follow_rotate : MonoBehaviour {
 		allWheels.AddRange(GameObject.FindGameObjectsWithTag("wheel"));
 		allWheels.Remove (gameObject); //exclude this gameobject from the list.
 		//Debug.Log ("amounts of the Wheels: " + allWheels.Count);
-
-		lGameManager = GameObject.Find ("GameManager");
 
 	}
 		
@@ -134,6 +130,12 @@ public class follow_rotate : MonoBehaviour {
 
 					//chooseAttachGameObject ();
 				}
+
+//				if (!nearest_attachToW1) 
+//				{
+////					lfollow_rotate = closestObject.GetComponent<follow_rotate> ();
+////					aspeed = Time.deltaTime * -lfollow_rotate.aspeed / multiplescale_w1;  // here's the warning bug!! why? 
+//				}
 				
 			}
 				
@@ -158,40 +160,78 @@ public class follow_rotate : MonoBehaviour {
 			timeHere = timeHere + Time.deltaTime * lrotate.Speed/multiplescale_w_nearest;
 			//Debug.Log ("timeHere w2: "  + timeHere );
 		}
-			
+
+
 		Debug.DrawLine (transform.position,  go_collide.transform.position, Color.yellow);
 
+////distinguish whose timeHere
+				 
+//		if (gameObject == lw2) 
+//		{
+//			timeHeres [0] = timeHere;
+//		}
+////judge when to stop rotating?
+
+		//Debug.Log ("go_collides: " + go_collides[0] +" " +  go_collides[1]);
+		//Debug.Log (gameObject + " : " +attachGameObject_1 + " : " +attachGameObject_2 + " : " +attachGameObject_3);
 
 	}
 
 	/// / when there is a nearest gameobeject, mark it as "attachGameObject_1","attachGameObject_2""attachGameObject_3"
+//	void chooseAttachGameObject ()  //有问题！！！！
+//	{
+//		if (attachGameObject_1 == null) 
+//		{
+//			attachGameObject_1 = closestObject;
+//			attachGameObject_2 = null;
+//			attachGameObject_3 = null;
+//		}
+//
+//		if (attachGameObject_1 != null) 
+//		{
+//			if (attachGameObject_2 != null) 
+//			{
+////				if (attachGameObject_3 != null) 
+////				{
+////				}
+//
+//				if (attachGameObject_3 == null) 
+//				{
+//					attachGameObject_3 = closestObject;
+//
+//				}
+//			}
+//			if (attachGameObject_2 == null) 
+//			{
+//				attachGameObject_2 = closestObject;
+//				attachGameObject_3 = null;
+//			}
+//		}
+//
+//	}
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
 
-		//go_collide = other.gameObject;
+		go_collide = other.gameObject;
 
-		//go_collides.Add (go_collide);
+		go_collides.Add (go_collide);
+		//public_collision = collision;
 
-		if (other.tag == "wheel") 
-		{
-			go_collide = other.gameObject;
+		//Debug.Log (gameObject + " collide with: " + go_collide);
+		//Debug.DrawLine (transform.position, go_collide.transform.position, Color.red);
 
-			//go_collides_w1.Add (go_collide);
+//		Vector2 dir = go_collide.transform.position - transform.position; 
+//		Vector2 v2_go_collide = new Vector2 (go_collide.transform.position.x, go_collide.transform.position.y);
+//
+//		Debug.Log ("dir: " +dir);
+//
+//		RaycastHit2D hit = Physics2D.Raycast (v2_go_collide, dir);
+//		if(hit.collider != null)
+//		{
+//			Debug.Log(gameObject + " collides with "+ go_collide +" at : "+ hit.point);
+//		}
+//
 
-			if (GameManager.gear_collides.Contains (go_collide)) 
-			{
-			} 
-			else 
-			{
-				GameManager.gear_collides.Add (go_collide);
-			}
-
-			//Debug.Log ("collide");
-
-			lGameManager.SendMessage ("whenListChange");
-		}
 	}
-
-
 }

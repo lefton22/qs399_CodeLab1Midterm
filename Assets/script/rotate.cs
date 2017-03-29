@@ -18,10 +18,6 @@ public class rotate : MonoBehaviour {
 
 	public float radius_currentWheel;
 
-	public GameObject go_collide_w1;
-
-	GameObject lGameManager;
-
 	void Start () 
 	{
 
@@ -37,34 +33,13 @@ public class rotate : MonoBehaviour {
 ////create a time of this wheel
 		timeHere = timeHere + Time.deltaTime * Speed;
 		//Debug.Log ("TimeHere w1: " + timeHere);
-
-
-		//Debug.Log (GameManager.gear);
-
-		lGameManager = GameObject.Find ("GameManager");
 	}
-		
 
-	void OnTriggerEnter2D(Collider2D other)
+
+	void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (other.tag == "wheel") 
-		{
-			go_collide_w1 = other.gameObject;
+		//sDebug.Log ("collide");
 
-			//go_collides_w1.Add (go_collide);
-
-			if (GameManager.gear_collides.Contains (go_collide_w1)) 
-			{
-			} 
-			else 
-			{
-				GameManager.gear_collides.Add (go_collide_w1);
-			}
-
-			//Debug.Log ("collide");
-			lGameManager.SendMessage ("whenListChange");
-
-		}
 
 	}
 }

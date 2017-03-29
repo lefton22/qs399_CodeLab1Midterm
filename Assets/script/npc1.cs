@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class npc1 : MonoBehaviour {
 	
-	GameObject myParent;
+	GameObject parent;
 	Vector3 v3_parent;
 	Vector3 v3_intersectPoint;
 
@@ -26,48 +26,41 @@ public class npc1 : MonoBehaviour {
 	void Start () 
 	{
 ////find the parent and get the parent's axis
-		myParent =  transform.parent.gameObject;
+		parent =  transform.parent.gameObject;
 
 		lw1 = GameObject.Find ("w1");
 
 		//Debug.Log (" npc1's parent: " + transform.parent.gameObject);
 		isChangeTrail = true;
 
+
 	}
 	
 
 	void Update ()
 	{
-		float radius = myParent.transform.localScale.x;
 
-		v3_parent = myParent.transform.position;
+
+		float radius = parent.transform.localScale.x;
+
+		v3_parent = parent.transform.position;
 
 	
 		//transform.localPosition = new Vector3 (/*parent.transform.localScale.x/4f*/0.5f,0,0);
 
 		////get all the gameobjects collided with this npc's parent?
-
-		if (myParent != lw1)
-		{
-		lgo_collides = myParent.GetComponent<follow_rotate> ().go_collides; 
+		lgo_collides = parent.GetComponent<follow_rotate> ().go_collides; 
 		//Debug.Log ("go_cillides: " + lgo_collides[0] + " " + lgo_collides[1] + " " + lgo_collides[2] );
-			//Debug.Log(gameObject + " not w1...");
-		}
-
-//		if (myParent == lw1) 
-//		{
-//		lgo_collides = myParent.GetComponent<follow_rotate> ().go_collides; 
-//		}
-
 
 		for (int i = 0; i < lgo_collides.Count; i++) 
 
 		{ 
 
 ////find the collided wheel from the parent wheel, and get the position
-
+			//Vector3 v3_parentsNearest = parent.GetComponent<follow_rotate> ().v3_currentNearestWheel; 
 			Vector3 v3_lgo_collides = lgo_collides[i].transform.position;
 
+			//float radius_parent = parent.GetComponent<follow_rotate> ().radius_currentWheel;
 			if (lgo_collides[i] == lw1)
 			{
 				 radius_collided = lgo_collides[i].GetComponent<rotate> ().radius_currentWheel; 
@@ -80,8 +73,12 @@ public class npc1 : MonoBehaviour {
 			//Debug.Log ("v3_parentsNearest: " +v3_parentsNearest + "this parent: " + v3_parent);
 
 ////calculate the cross point of two wheels
-
+			//Vector3 dist_two = v3_parentsNearest - v3_parent;
+			//Debug.Log ("dist_two: " + dist_two);
 			Vector3 dist_two =   v3_lgo_collides - v3_parent;
+
+			//v3_intersectPoint = v3_parent + dist_two.normalized * radius_parent / 2;
+			//Debug.Log (parent + " and " + lgo_collides[i] + "'s cross point: " + v3_intersectPoint);
 
 			v3_intersectPoint = v3_parent + dist_two.normalized * /*radius_collided / 2f*/ radius/2f;
 
@@ -89,26 +86,44 @@ public class npc1 : MonoBehaviour {
 			v3_worldPos = transform.TransformPoint (transform.position);
 			//Debug.Log ("v3_worldPos: " + v3_worldPos);
 
+			//nearestWheel = parent.GetComponent<follow_rotate> ().closestObject; // no need any more
+
 ////ctreat only one cross point for every tw crossing wheels
 			/// if the cross point is near the npc,cross
 
-			if (Mathf.Abs (v3_intersectPoint.x - transform.position.x) < 0.2f &&
+			//Debug.Log(lgo_collides [i] + " cross point: " + v3_intersectPoint);
+			//Debug.Log(lgo_collides [i] +" 差值x：" + Mathf.Abs (v3_intersectPoint.x - transform.position.x)+ " 差值y: " +Mathf.Abs (v3_intersectPoint.y - transform.position.y));
+			if ( 
+				Mathf.Abs (v3_intersectPoint.x - transform.position.x) < 0.2f &&
 				Mathf.Abs (v3_intersectPoint.y - transform.position.y) < 0.2f && isChangeTrail ) 
 			{
 				Transform currentWorldPos = transform;
 
+				//Debug.Log (currentWorldPos.position +": local position: " + localPos);
+				//Destroy(parent);
+
 				transform.SetParent (lgo_collides[i].transform); 
-				myParent = lgo_collides [i];
+				parent = lgo_collides [i];
+
+				//Vector3 localPos = currentWorldPos . InverseTransformPoint(currentWorldPos.position);
+				//transform.position =  currentWorldPos.position + new Vector3(0.2f, 0.2f,0);
 
 				transform.position = v3_intersectPoint;
-		
+
+				//transform.localPosition.x = lgo_collides [i].transform.localScale.x / 2;
+				//transform.localPosition = new Vector3 (lgo_collides[i].transform.lossyScale.x/2, transform.localPosition.y, transform.localPosition.z);
+				//transform.position = new Vector3 (2f, 0, 0);
+				//Debug.Log("change the trial! to: " + lgo_collides [i] +i);
+				////need to add a limitation now to avoid the npc1 hop forever
 				isChangeTrail = false;
 
 				meetTime = Time.time;
 
 			}
 
-			if(	Time.time - meetTime > 1.5f) 
+			if(	/* Mathf.Abs (v3_intersectPoint.x - transform.position.x) > 0.2f &&
+				Mathf.Abs (v3_intersectPoint.y - transform.position.y) > 0.2f */
+				Time.time - meetTime > 1.5f) 
 			{
 				isChangeTrail = true;
 			}
@@ -129,5 +144,15 @@ public class npc1 : MonoBehaviour {
 
 
 	///  and if any npc collide with this collider, change tha parent
+//	void OnCollisionEnter(Collision collision)
+//	{
+//		//Debug.Log ("");
+//		//transform.SetParent(nearestWheel.transform);
+//	}
 
+
+//	void OnTriggerEnter2D (Collider2D collision)
+//	{
+//
+//	}
 }
